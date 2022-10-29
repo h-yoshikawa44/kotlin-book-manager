@@ -4,10 +4,24 @@
 
 教材出典：[Kotlin サーバーサイドプログラミング実践開発](https://gihyo.jp/book/2021/978-4-297-11859-4) ch6～8
 
+## 環境立ち上げ
+MySQL コンテナ立ち上げ
+```bash
+docker-compose up -d
+```
+
+フロントエンド（front 直下）
+```bash
+npm run dev
+```
+
+バックエンド  
+BookManagerAppliation.kt を実行
+
 ## データベース
 コンテナに入る
 ```bash
-docker exec -it mysql_host bash
+docker-compose exec db bash
 ```
 
 MySQL へログイン
