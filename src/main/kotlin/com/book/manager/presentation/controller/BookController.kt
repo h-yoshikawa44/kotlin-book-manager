@@ -3,7 +3,6 @@ package com.book.manager.presentation.controller
 import com.book.manager.application.service.BookService
 import com.book.manager.presentation.form.BookInfo
 import com.book.manager.presentation.form.GetBookListResponse
-import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController
 // API のルーティングや、クライアントからのパラメータをつけ取って Service のロジックを実行する層
 @RestController
 @RequestMapping("book")
-@CrossOrigin
 class BookController(
     private val bookService: BookService
 ) {
