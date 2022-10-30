@@ -1,19 +1,9 @@
 package com.book.manager.infrastructure.database.mapper.custom
 
-import com.book.manager.infrastructure.database.mapper.BookDynamicSqlSupport
-import com.book.manager.infrastructure.database.mapper.BookDynamicSqlSupport.author
-import com.book.manager.infrastructure.database.mapper.BookDynamicSqlSupport.id
-import com.book.manager.infrastructure.database.mapper.BookDynamicSqlSupport.releaseDate
-import com.book.manager.infrastructure.database.mapper.BookDynamicSqlSupport.title
-import com.book.manager.infrastructure.database.mapper.RentalDynamicSqlSupport
-import com.book.manager.infrastructure.database.mapper.RentalDynamicSqlSupport.rentalDatetime
-import com.book.manager.infrastructure.database.mapper.RentalDynamicSqlSupport.returnDeadline
-import com.book.manager.infrastructure.database.mapper.RentalDynamicSqlSupport.userId
+import com.book.manager.infrastructure.database.mapper.BookDynamicSqlSupport.book
+import com.book.manager.infrastructure.database.mapper.RentalDynamicSqlSupport.rental
 import com.book.manager.infrastructure.database.record.custom.BookWithRental
-import org.apache.ibatis.annotations.Mapper
-import org.apache.ibatis.annotations.Result
-import org.apache.ibatis.annotations.Results
-import org.apache.ibatis.annotations.SelectProvider
+import org.apache.ibatis.annotations.*
 import org.apache.ibatis.type.JdbcType
 import org.mybatis.dynamic.sql.SqlBuilder.*
 import org.mybatis.dynamic.sql.render.RenderingStrategies
@@ -36,16 +26,20 @@ interface BookWithRentalMapper {
     )
     // SelectStatementProvider 型の値は、MyBatis Dynamic SQL を使用して組み立てたクエリの情報を保持しているオブジェクト
     fun selectMany(selectStatement: SelectStatementProvider): List<BookWithRental>
+
+    @SelectProvider(type = SqlProviderAdapter::class, method = "select")
+    @ResultMap("BookWithRentalRecordResult")
+    fun selectOne(selectStatement: SelectStatementProvider): BookWithRental?
 }
 
 private val columnList = listOf(
-    id,
-    title,
-    author,
-    releaseDate,
-    userId,
-    rentalDatetime,
-    returnDeadline
+    book.id,
+    book.title,
+    book.author,
+    book.releaseDate,
+    rental.userId,
+    rental.rentalDatetime,
+    rental.returnDeadline
 )
 
 /**
@@ -54,9 +48,19 @@ private val columnList = listOf(
 fun BookWithRentalMapper.select(): List<BookWithRental> {
     // MyBatis Dynamic SQL でクエリを書く
     val selectStatement = select(columnList)
-        .from(BookDynamicSqlSupport.book, "b")
-        .leftJoin(RentalDynamicSqlSupport.rental, "r").on(BookDynamicSqlSupport.id, equalTo(RentalDynamicSqlSupport.bookId))
+        .from(book, "b")
+        .leftJoin(rental, "r").on(book.id, equalTo(rental.bookId))
         .build()
         .render(RenderingStrategies.MYBATIS3)
     return selectMany(selectStatement)
+}
+
+fun BookWithRentalMapper.selectByPrimaryKey(id_: Long): BookWithRental? {
+    val selectStatement = select(columnList)
+        .from(book, "b")
+        .leftJoin(rental, "r").on(book.id, equalTo(rental.bookId))
+        .where(book.id, isEqualTo(id_))
+        .build()
+        .render(RenderingStrategies.MYBATIS3)
+    return selectOne(selectStatement)
 }
