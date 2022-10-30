@@ -39,3 +39,10 @@ data class RentalInfo(
 ) {
     constructor(rental: RentalModel) : this(rental.userId, rental.rentalDateTime, rental.returnDeadline)
 }
+
+data class RegisterBookRequest(
+    val id: Long,
+    val title: String,
+    val author: String,
+    val releaseDate: LocalDate
+)
