@@ -9,8 +9,10 @@ import com.book.manager.infrastructure.database.mapper.custom.BookWithRentalMapp
 import com.book.manager.infrastructure.database.mapper.custom.select
 import com.book.manager.infrastructure.database.mapper.custom.selectByPrimaryKey
 import com.book.manager.infrastructure.database.mapper.insert
+import com.book.manager.infrastructure.database.mapper.updateByPrimaryKeySelective
 import com.book.manager.infrastructure.database.record.Book
 import org.springframework.stereotype.Repository
+import java.time.LocalDate
 
 // interface を使用した上で実装することで、DB 関連の実装をこの中に閉じ込め、呼出し層から意識する必要がなくなる
 @Suppress("SpringJavaInjectionPointsAutowiringInspection")
@@ -53,5 +55,9 @@ class BookRepositoryImpl(
 
     private fun toRecord(model: BookModel): Book {
         return Book(model.id, model.title, model.author, model.releaseDate)
+    }
+
+    override fun update(id: Long, title: String?, author: String?, releaseDate: LocalDate?) {
+        bookMapper.updateByPrimaryKeySelective(Book(id, title, author, releaseDate))
     }
 }
