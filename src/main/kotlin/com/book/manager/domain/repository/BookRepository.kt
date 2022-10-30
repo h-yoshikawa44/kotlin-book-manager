@@ -12,4 +12,6 @@ interface BookRepository {
     fun register(book: BookModel)
 
     fun update(id: Long, title: String?, author: String?, releaseDate: LocalDate?)
+
+    fun delete(id: Long)
 }
