@@ -2,7 +2,8 @@ version: '3'
 services:
   # MySQL
   db:
-    image: mysql:8.0.30
+    build:
+      context: docker/mysql
     ports:
       - "3306:3306"
     container_name: mysql_host
