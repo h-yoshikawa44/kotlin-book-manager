@@ -4,9 +4,12 @@ import com.book.manager.domain.model.BookModel
 import com.book.manager.domain.model.BookWithRentalModel
 import com.book.manager.domain.model.RentalModel
 import com.book.manager.domain.repository.BookRepository
+import com.book.manager.infrastructure.database.mapper.BookMapper
 import com.book.manager.infrastructure.database.mapper.custom.BookWithRentalMapper
 import com.book.manager.infrastructure.database.mapper.custom.select
 import com.book.manager.infrastructure.database.mapper.custom.selectByPrimaryKey
+import com.book.manager.infrastructure.database.mapper.insert
+import com.book.manager.infrastructure.database.record.Book
 import org.springframework.stereotype.Repository
 
 // interface を使用した上で実装することで、DB 関連の実装をこの中に閉じ込め、呼出し層から意識する必要がなくなる
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Repository
 @Repository
 class BookRepositoryImpl(
     private val bookWithRentalMapper: BookWithRentalMapper,
+    private val bookMapper: BookMapper
 ) : BookRepository {
     override fun findAllWithRental(): List<BookWithRentalModel> {
         // Record クラスはあくまで MyBatis に依存するため、Model クラスに変換することで、呼出し側からは Model クラスだけ意識でよくなる
@@ -41,5 +45,13 @@ class BookRepositoryImpl(
             )
         }
         return BookWithRentalModel(bookModel, rentalModel)
+    }
+
+    override fun register(book: BookModel) {
+        bookMapper.insert(toRecord(book))
+    }
+
+    private fun toRecord(model: BookModel): Book {
+        return Book(model.id, model.title, model.author, model.releaseDate)
     }
 }
