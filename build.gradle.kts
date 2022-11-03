@@ -26,6 +26,7 @@ dependencies {
 	implementation("org.mybatis.dynamic-sql:mybatis-dynamic-sql:1.4.1")
 	implementation("mysql:mysql-connector-java:8.0.30")
 	mybatisGenerator("org.mybatis.generator:mybatis-generator-core:1.4.1")
+	implementation("org.springframework.boot:spring-boot-starter-security")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
