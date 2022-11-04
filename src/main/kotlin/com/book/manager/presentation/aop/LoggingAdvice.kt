@@ -53,4 +53,16 @@ class LoggingAdvice {
     fun afterReturningLog(joinPoint: JoinPoint, returnValue: Any?) {
         logger.info("End: ${joinPoint.signature} returnValue=${returnValue}")
     }
+
+    // 例外の種類に応じて実行する後処理（Throwable なのですべての例外が発生した際に呼ばれる）
+    @AfterThrowing("execution(* com.book.manager.presentation.controller..*.*(..))", throwing = "e")
+    fun afterThrowingLog(joinPoint: JoinPoint, e: Throwable) {
+        logger.error("Exception: ${e.javaClass} signature=${joinPoint.signature} message=${e.message}")
+    }
+
+    // 例外の種類に応じて実行する後処理（IllegalArgumentException が発生した際に呼ばれる）
+    @AfterThrowing("execution(* com.book.manager.presentation.controller..*.*(..))", throwing = "e")
+    fun afterThrowingLog(joinPoint: JoinPoint, e: IllegalArgumentException) {
+        logger.error("Exception: ${e.javaClass} signature=${joinPoint.signature} message=${e.message}")
+    }
 }
